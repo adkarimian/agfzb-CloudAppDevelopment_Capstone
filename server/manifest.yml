@@ -1,11 +1,11 @@
   applications:
   - name: djangoapp
     routes:
-      - route: $HOST.$DOMAIN
+      - route: 24c83058-edb3-4e00-908a-8ae6e35d55d9.eu-de.mybluemix.net
     memory: 128M
     buildpack: python_buildpack
   - name: djangoapp-nginx
     routes:
-      - route: $HOST.$DOMAIN/static
+      - route: 24c83058-edb3-4e00-908a-8ae6e35d55d9.eu-de.mybluemix.net/static
     memory: 128M
     buildpack: staticfile_buildpack

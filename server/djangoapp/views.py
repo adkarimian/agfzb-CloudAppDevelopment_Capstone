@@ -107,13 +107,19 @@ def get_dealer_details(request, dealer_id):
 def add_review(request, dealer_id):
     if request.user.is_authenticated:
         review = dict()
-        review["time"] = datetime.utcnow().isoformat()
-        review["dealership"] = 11
+        review["name"] = "aDel"
+        review["dealership"] = 15
         review["review"] = "This is a great car dealer"
+        review["purchase"] = "ppp"
+        review["purchase_date"] = datetime.utcnow().isoformat()
+        review["car_make"] = "bbb"
+        review["car_model"] = "mmm"
+        review["car_year"] = "2020"
+        review["time"] = datetime.utcnow().isoformat()
         json_payload = dict()
         json_payload["review"] = review
         url = "https://eu-de.functions.appdomain.cloud/api/v1/web/07df66ba-d92d-4404-ac1d-29d3df41fb8d/default/post-review-by-dealership.json"
-        response = post_request(url, json_payload, dealerId=dealer_id)
+        response = post_request(url, json_payload, id=dealer_id)
         return response
     else:
         return "Not Authenticated";

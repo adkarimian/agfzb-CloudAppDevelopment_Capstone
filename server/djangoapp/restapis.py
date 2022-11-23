@@ -94,10 +94,17 @@ def get_dealer_reviews_from_cf(url, **kwargs):
 # - Call get_request() with specified arguments
 # - Get the returned sentiment label such as Positive or Negative
 def analyze_review_sentiments(dealerreview):
-    categories = dict()
-    categories["limit"] = 3
+    entities = dict()
+    entities["sentiment"] = True
+    entities["emotion"] = True
+    entities["limit"] = 2
+    keywords = dict()
+    keywords["sentiment"] = True
+    keywords["emotion"] = True
+    keywords["limit"] = 2
     features = dict()
-    features["categories"] = categories
+    features["entities"] = entities
+    features["keywords"] = keywords
     params = dict()
     params["text"] = dealerreview
     params["version"] = "2022-04-07"

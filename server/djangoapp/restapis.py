@@ -71,7 +71,7 @@ def get_dealer_reviews_from_cf(url, **kwargs):
                                       car_make=review_doc["car_make"],
                                       car_model=review_doc["car_model"],
                                       car_year=review_doc["car_year"],
-                                      sentiment="")
+                                      sentiment=analyze_review_sentiments(review_doc["review"]))
             results.append(review_obj)
     return results
 
@@ -80,6 +80,26 @@ def get_dealer_reviews_from_cf(url, **kwargs):
 # def analyze_review_sentiments(text):
 # - Call get_request() with specified arguments
 # - Get the returned sentiment label such as Positive or Negative
-
+def analyze_review_sentiments(dealerreview):
+    categories = dict()
+    categories["limit"] = 3
+    features = dict()
+    features["categories"] = categories
+    params = dict()
+    params["text"] = dealerreview
+    params["version"] = "2022-04-07"
+    params["features"] = features
+    #params["return_analyzed_text"] = ""
+    api_key = "90RBelHoIIKpHL3qNidCEO0iHgccq6qtWC3sI_GFwY2T"
+    url = "https://api.eu-de.natural-language-understanding.watson.cloud.ibm.com/instances/af82deaf-b6a4-4d5a-a6c7-617760c2f5b5/v1/analyze?version=2022-04-07"
+    try:
+        response = requests.get(url, params=params, headers={'Content-Type': 'application/json'},
+                                    auth=HTTPBasicAuth('apikey', api_key))
+    except:
+        pass
+    status_code = response.status_code
+    print("With status {} ".format(status_code))
+    json_data = json.loads(response.text)
+    return json_data
 
 

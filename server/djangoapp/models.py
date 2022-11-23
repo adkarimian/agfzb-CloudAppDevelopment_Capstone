@@ -89,4 +89,4 @@ class DealerReview:
         self.sentiment = sentiment
         
     def __str__(self):
-        return "Review: " + self.review
+        return "Review: " + self.review + self.sentiment

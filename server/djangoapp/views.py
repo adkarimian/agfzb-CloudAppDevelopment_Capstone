@@ -9,7 +9,7 @@ from django.contrib import messages
 from datetime import datetime
 import logging
 import json
-from .restapis import get_dealers_from_cf,get_dealer_reviews_from_cf
+from .restapis import get_dealers_from_cf,get_dealer_reviews_from_cf,post_request
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -104,4 +104,16 @@ def get_dealer_details(request, dealer_id):
 # Create a `add_review` view to submit a review
 # def add_review(request, dealer_id):
 # ...
-
+def add_review(request, dealer_id):
+    if request.user.is_authenticated:
+        review = dict()
+        review["time"] = datetime.utcnow().isoformat()
+        review["dealership"] = 11
+        review["review"] = "This is a great car dealer"
+        json_payload = dict()
+        json_payload["review"] = review
+        url = "https://eu-de.functions.appdomain.cloud/api/v1/web/07df66ba-d92d-4404-ac1d-29d3df41fb8d/default/post-review-by-dealership.json"
+        response = post_request(url, json_payload, dealerId=dealer_id)
+        return response
+    else:
+        return "Not Authenticated";

@@ -113,9 +113,10 @@ def analyze_review_sentiments(dealerreview):
     #params["return_analyzed_text"] = ""
     api_key = "90RBelHoIIKpHL3qNidCEO0iHgccq6qtWC3sI_GFwY2T"
     url1 = "https://api.eu-de.natural-language-understanding.watson.cloud.ibm.com/instances/af82deaf-b6a4-4d5a-a6c7-617760c2f5b5/v1/analyze?version=2022-04-07"
-    url2 = "&text="
-    url3 = "&features=keywords,entities&entities.emotion=true&entities.sentiment=true&keywords.emotion=true&keywords.sentiment=true"
-    url = url1 + url2 + dealerreview + url3
+    url2 = "&language=en"
+    url3 = "&text="
+    url4 = "&features=keywords,entities&entities.emotion=true&entities.sentiment=true&keywords.emotion=true&keywords.sentiment=true"
+    url = url1 + url2 + url3 + dealerreview + url4
     try:
         response = requests.get(url, params=params, headers={'Content-Type': 'application/json'},
                                     auth=HTTPBasicAuth('apikey', api_key))
@@ -124,6 +125,6 @@ def analyze_review_sentiments(dealerreview):
     status_code = response.status_code
     print("With status {} ".format(status_code))
     json_data = json.loads(response.text)
-    return json_data['keywords'][0]['sentiment']['label']
+    return json_data['keywords'][0]['sentiment']['label'] if json_data['keywords'] else "neutral"
 
 

@@ -38,14 +38,14 @@
 
 
         {% if user.is_authenticated %}
-            <a href="{% url 'djangoapp:add_review' dealer_id=15 %}">link to form</a>
+            <a href="{% url 'djangoapp:add_review' dealer_id=dealerid %}">link to form</a>
         {% endif %}
     
     <h1>Reviews to ...</h1>
     <div class="card-columns">
     {% for dealer in dealership_details %}
     <div class="card">
-        <img class="card-img-left" src="{{MEDIA_URL}}/emoji/positive.png">
+        <img class="card-img-left" style="width: 70px;" src="{{MEDIA_URL}}/emoji/positive.png">
         <div class="card-body">
             <h5 class="card-title">{{dealer.name}}</h5>
             <p class="card-text">{{dealer.review}}</p>

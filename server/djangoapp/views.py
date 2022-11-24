@@ -80,9 +80,8 @@ def login_page(request):
 # Update the `get_dealerships` view to render the index page with a list of dealerships
 def get_dealerships(request):
     if request.method == "GET":
-        url = "https://eu-de.functions.appdomain.cloud/api/v1/web/07df66ba-d92d-4404-ac1d-29d3df41fb8d/default/get-all-dealerships.json"
         # Get dealers from the URL
-        dealerships = get_dealers_from_cf(url)
+        dealerships = get_dealership()
         # Concat all dealer's short name
         context = {
             'dealership_list' : dealerships
@@ -90,7 +89,10 @@ def get_dealerships(request):
         # Return a list of dealer short name
         return render(request, 'djangoapp/index.html', context)
 
-
+def get_dealership():
+    url = "https://eu-de.functions.appdomain.cloud/api/v1/web/07df66ba-d92d-4404-ac1d-29d3df41fb8d/default/get-all-dealerships.json"
+    dealerships = get_dealers_from_cf(url)
+    return dealerships
 # Create a `get_dealer_details` view to render the reviews of a dealer
 # def get_dealer_details(request, dealer_id):
 # ...
@@ -100,7 +102,10 @@ def get_dealer_details(request, dealer_id):
         # Get dealers from the URL
         dealership_details = get_dealer_reviews_from_cf(url,dealerId=dealer_id)
         # Concat all dealer's short name
+        dealerships = get_dealership()
+        dealerships = filter(lambda e: e.id == dealer_id, dealerships)
         context = {
+            'dealer_name':list(dealerships)[0].full_name,
             'dealerid':dealer_id,
             'dealership_details':dealership_details
         }
@@ -133,7 +138,10 @@ def add_review(request, dealer_id):
             return HttpResponse()
     elif request.method == "GET":
         car_models = CarModel.objects.all()
+        dealerships = get_dealership()
+        dealerships = filter(lambda e: e.id == dealer_id, dealerships)
         context = {
+            'dealer_name':list(dealerships)[0].full_name,
             'cars':car_models
         }
         return render(request, 'djangoapp/add_review.html', context)

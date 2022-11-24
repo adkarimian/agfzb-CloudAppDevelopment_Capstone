@@ -20,8 +20,14 @@
     <nav class="navbar navbar-light bg-light">
       <div class="container-fluid">
           <div class="navbar-header">
-                <a class="navbar-brand" href="#">Dealership Review</a>
+                <a class="navbar-brand" href="{% url 'djangoapp:index' %}">Dealership Review</a>
           </div>
+          <ul class="nav navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="btn btn-link" href="{% url 'djangoapp:about' %}">About Us</a>
+                <a class="btn btn-link" href="{% url 'djangoapp:contact' %}">Contact Us</a>
+            </li>
+          </ul>
           <ul class="nav navbar-nav navbar-right">
               {% if user.is_authenticated %}
               <li>
@@ -45,7 +51,13 @@
       </div>
   </nav>
 
-    contact
+  <div class="container">
+    <h1>Car Dealership Co.</h1>
+    <h4>Phone Number:</h4>
+    <h5>123456</h5>
+    <h4>Address:</h4>
+    <h5>No. 123 Main Street</h5>
+  </div>
 
     </body>
 

@@ -22,6 +22,13 @@
           <div class="navbar-header">
                 <a class="navbar-brand" href="#">Dealership Review</a>
           </div>
+          <ul class="nav navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="btn btn-link" href="{% url 'djangoapp:about' %}">About Us</a>
+                <a class="btn btn-link" href="{% url 'djangoapp:contact' %}">Contact Us</a>
+            </li>
+          </ul>
+          
           <ul class="nav navbar-nav navbar-right">
               {% if user.is_authenticated %}
               <li>

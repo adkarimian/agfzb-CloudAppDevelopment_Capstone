@@ -97,21 +97,25 @@ def analyze_review_sentiments(dealerreview):
     entities = dict()
     entities["sentiment"] = True
     entities["emotion"] = True
-    entities["limit"] = 2
+    #entities["limit"] = 2
     keywords = dict()
     keywords["sentiment"] = True
     keywords["emotion"] = True
-    keywords["limit"] = 2
+    #keywords["limit"] = 2
     features = dict()
     features["entities"] = entities
     features["keywords"] = keywords
     params = dict()
-    params["text"] = dealerreview
-    params["version"] = "2022-04-07"
-    params["features"] = features
+    #params["text"] = dealerreview
+    #params["language"] = "en"
+    #params["version"] = "2022-04-07"
+    #params["features"] = features
     #params["return_analyzed_text"] = ""
     api_key = "90RBelHoIIKpHL3qNidCEO0iHgccq6qtWC3sI_GFwY2T"
-    url = "https://api.eu-de.natural-language-understanding.watson.cloud.ibm.com/instances/af82deaf-b6a4-4d5a-a6c7-617760c2f5b5/v1/analyze?version=2022-04-07"
+    url1 = "https://api.eu-de.natural-language-understanding.watson.cloud.ibm.com/instances/af82deaf-b6a4-4d5a-a6c7-617760c2f5b5/v1/analyze?version=2022-04-07"
+    url2 = "&text="
+    url3 = "&features=keywords,entities&entities.emotion=true&entities.sentiment=true&keywords.emotion=true&keywords.sentiment=true"
+    url = url1 + url2 + dealerreview + url3
     try:
         response = requests.get(url, params=params, headers={'Content-Type': 'application/json'},
                                     auth=HTTPBasicAuth('apikey', api_key))
@@ -120,6 +124,6 @@ def analyze_review_sentiments(dealerreview):
     status_code = response.status_code
     print("With status {} ".format(status_code))
     json_data = json.loads(response.text)
-    return json_data
+    return json_data['keywords'][0]['sentiment']['label']
 
 

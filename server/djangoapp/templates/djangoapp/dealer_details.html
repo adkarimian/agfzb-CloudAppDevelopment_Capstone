@@ -59,7 +59,8 @@
         <img class="card-img-left" style="width: 70px;" src="{{MEDIA_URL}}/emoji/neutral.png">
         {% endif %}
         <div class="card-body">
-            <h5 class="card-title">{{dealer.name}}</h5>
+            <!-- <h5 class="card-title">{{dealer.name}}</h5> -->
+            <h5>{{dealer.car_model}}-{{dealer.car_make}}-{{ dealer.car_year }}</h5>
             <p class="card-text">{{dealer.review}}</p>
         </div>
     </div>

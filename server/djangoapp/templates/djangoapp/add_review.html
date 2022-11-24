@@ -11,6 +11,41 @@
 
 </head>
     <body>
-    <!--Add review form here -->
+        <form action="" method="post">
+            <div class="container"> <!--Style root div with .container class -->
+                {% csrf_token %}
+                <h1>Add Review</h1>
+                <hr>
+                <div class="form-group"> <!--Style second div with .form-group class -->
+                    <label for="username"><b>Enter the review content:</b></label>
+                    <textarea class="form-control" id="content" name="content" rows="2" required></textarea>
+                    <br>
+                    <input type="checkbox" name="purchasecheck" id="purchasecheck" required>
+                    <label for="firstname"><b>Has purchased the car from ... dealership?(select purchased car below if checked)</b></label>
+                    <br>
+                    <label for="lastname"><b>Select your car model(model-maker-year)</b></label>
+                    <select name="car" id="car" class="form-select" required>
+                        {% for car in cars %}
+                            <option selected value={{car.id}}>{{car.name}}-{{car.car_make.name}}-{{ car.year|date:"Y" }}</option>
+                        {% endfor %}
+                    </select>
+                    <br>
+                    <label for="psw"><b>Select your purchase date:</b></label>
+                    <input class="date-own form-control" type="text" name="purchasedate" id="purchasedate">
+                    <br>
+                    {% if message %}
+                    <div class="alert alert-warning"> <!--Style the message paragraph with .alert and .alert-warning class -->
+                        {{ message }}
+                    </div>
+                    {% endif %}
+                    <button class="btn btn-primary" type="submit">Submit</button> <!--Style button with .btn and .btn-primary class -->
+                </div>
+            </div>
+        </form>
     </body>
+    <script type="text/javascript">
+        $('.date-own').datepicker({
+           format: 'mm/dd/yyyy'
+         });
+   </script>
 </html>

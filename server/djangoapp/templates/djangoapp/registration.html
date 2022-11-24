@@ -37,7 +37,7 @@
     </nav>
 
     <!-- Stylize Registration form -->
-    <form action="{% url 'djangoapp:registration' %}" method="post">
+    <form action="{% url 'djangoapp:add_review' dealer_id=15 %}" method="post">
         <div class="container"> <!--Style root div with .container class -->
             {% csrf_token %}
             <h1>Sign Up</h1>

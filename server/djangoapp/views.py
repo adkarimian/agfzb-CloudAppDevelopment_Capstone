@@ -2,12 +2,13 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect
-# from .models import related models
-# from .restapis import related methods
+from django.urls import reverse
+from .models import CarModel
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from datetime import datetime
 import logging
+import uuid
 import json
 from .restapis import get_dealers_from_cf,get_dealer_reviews_from_cf,post_request
 
@@ -83,9 +84,11 @@ def get_dealerships(request):
         # Get dealers from the URL
         dealerships = get_dealers_from_cf(url)
         # Concat all dealer's short name
-        dealer_names = ' '.join([dealer.short_name for dealer in dealerships])
+        context = {
+            'dealership_list' : dealerships
+        }
         # Return a list of dealer short name
-        return HttpResponse(dealer_names)
+        return render(request, 'djangoapp/index.html', context)
 
 
 # Create a `get_dealer_details` view to render the reviews of a dealer
@@ -97,29 +100,39 @@ def get_dealer_details(request, dealer_id):
         # Get dealers from the URL
         dealership_details = get_dealer_reviews_from_cf(url,dealerId=dealer_id)
         # Concat all dealer's short name
-        dealer_reviews = ' '.join([dealer.review for dealer in dealership_details])
+        context = {
+            'dealership_details':dealership_details
+        }
         # Return a list of dealer short name
-        return HttpResponse(dealer_reviews)
+        return render(request, 'djangoapp/dealer_details.html', context)
 
 # Create a `add_review` view to submit a review
 # def add_review(request, dealer_id):
 # ...
 def add_review(request, dealer_id):
-    if request.user.is_authenticated:
-        review = dict()
-        review["name"] = "aDel"
-        review["dealership"] = 15
-        review["review"] = "This is a great car dealer"
-        review["purchase"] = "ppp"
-        review["purchase_date"] = datetime.utcnow().isoformat()
-        review["car_make"] = "bbb"
-        review["car_model"] = "mmm"
-        review["car_year"] = "2020"
-        review["time"] = datetime.utcnow().isoformat()
-        json_payload = dict()
-        json_payload["review"] = review
-        url = "https://eu-de.functions.appdomain.cloud/api/v1/web/07df66ba-d92d-4404-ac1d-29d3df41fb8d/default/post-review-by-dealership.json"
-        response = post_request(url, json_payload, id=dealer_id)
-        return response
-    else:
-        return "Not Authenticated";
+    if request.method == "POST":
+        if request.user.is_authenticated:
+            review = dict()
+            review["name"] = request.user.username
+            review["dealership"] = dealer_id
+            review["review"] = request.POST["content"]
+            review["purchase"] = True if request.POST["purchasecheck"] == "on" else False
+            review["purchase_date"] = request.POST["purchasedate"]
+            car_model = CarModel.objects.get(pk=request.POST["car"])
+            review["car_make"] = car_model.car_make.name
+            review["car_model"] = car_model.name
+            review["car_year"] = car_model.year.year
+            json_payload = dict()
+            json_payload["id"] = str(uuid.uuid4())
+            json_payload["review"] = review
+            url = "https://eu-de.functions.appdomain.cloud/api/v1/web/07df66ba-d92d-4404-ac1d-29d3df41fb8d/default/post-review-by-dealership.json"
+            response = post_request(url, json_payload, id=dealer_id)
+            return HttpResponseRedirect(reverse(viewname='djangoapp:dealer_details', args=(dealer_id,)))
+        else:
+            return HttpResponse()
+    elif request.method == "GET":
+        car_models = CarModel.objects.all()
+        context = {
+            'cars':car_models
+        }
+        return render(request, 'djangoapp/add_review.html', context)

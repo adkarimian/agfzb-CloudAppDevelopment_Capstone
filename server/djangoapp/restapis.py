@@ -13,15 +13,15 @@ def get_request(url, **kwargs):
     try:
         # Call get method of requests library with URL and parameters
         response = requests.get(url, headers={'Content-Type': 'application/json'},
-                                    params=kwargs['params'])
-    except:
+                                    params=kwargs) 
+        status_code = response.status_code
+        print("With status {} ".format(status_code))
+        json_data = json.loads(response.text)
+        return json_data
+    except Exception as ex:
         # If any error occurs
         print("Network exception occurred")
-    status_code = response.status_code
-    print("With status {} ".format(status_code))
-    json_data = json.loads(response.text)
-    return json_data
-
+    
 # Create a `post_request` to make HTTP POST requests
 # e.g., response = requests.post(url, params=kwargs, json=payload)
 def post_request(url, json_payload, **kwargs):
@@ -31,13 +31,13 @@ def post_request(url, json_payload, **kwargs):
         # Call get method of requests library with URL and parameters
         response = requests.post(url, headers={'Content-Type': 'application/json'},
                                     params=kwargs,json=json_payload)
+        status_code = response.status_code
+        #print("With status {} ".format(status_code))
+        #json_data = json.loads(response.text)
+        return status_code
     except:
         # If any error occurs
         print("Network exception occurred")
-    status_code = response.status_code
-    #print("With status {} ".format(status_code))
-    #json_data = json.loads(response.text)
-    return status_code
 
 # Create a get_dealers_from_cf method to get dealers from a cloud function
 # def get_dealers_from_cf(url, **kwargs):
@@ -70,7 +70,7 @@ def get_dealers_from_cf(url, **kwargs):
 def get_dealer_reviews_from_cf(url, **kwargs):
     results = []
     # Call get_request with a URL parameter
-    json_result = get_request(url,params=kwargs)
+    json_result = get_request(url,dealerId=kwargs['dealerId'])
     if json_result:
         reviews = json_result["dbs"]["docs"]
         for review in reviews:
